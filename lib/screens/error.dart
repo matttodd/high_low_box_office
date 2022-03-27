@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:high_low_box_office/constants.dart';
+import 'package:high_low_box_office/screens/start_screen.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({Key? key}) : super(key: key);
