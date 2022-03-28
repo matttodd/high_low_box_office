@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:high_low_box_office/constants.dart';
 import 'package:high_low_box_office/model/movie_model.dart';
 import 'package:high_low_box_office/screens/error.dart';
-import 'dart:math' as math;
-
 import 'package:high_low_box_office/screens/lose_screen.dart';
 
 class GameScreen extends StatefulWidget {
@@ -78,14 +76,20 @@ class _GameScreenState extends State<GameScreen> {
                 handleLoss();
               },
               child: Container(
-                color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: _model.leftMovie?.poster ?? const AssetImage('images/transparent.png'),
+                  )
+                ),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_model.leftMovie!.title, style: kSubTitleTextStyle,),
-                      Text(isWaiting ? "?" : _model.leftMovie!.release!, style: kSubTitleTextStyle,),
-                      Text(isWaiting ? "?" : _model.leftMovie!.boxOffice!, style: kSubTitleTextStyle,),
+                      Text(_model.leftMovie?.title ?? "?", style: kSubTitleTextStyle,),
+                      Text(isWaiting ? "?" : _model.leftMovie?.release ?? "?", style: kSubTitleTextStyle,),
+                      Text(isWaiting ? "?" : _model.leftMovie?.synopsis ?? "?", style: kSubTitleTextStyle,),
+                      Text(isWaiting ? "?" : _model.leftMovie?.boxOffice ?? "?", style: kSubTitleTextStyle,),
                     ],
                   ),
                 ),
@@ -101,13 +105,19 @@ class _GameScreenState extends State<GameScreen> {
                 handleLoss();
               },
               child: Container(
-                color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: _model.rightMovie?.poster ?? const AssetImage('images/transparent.png'),
+                    )
+                ),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_model.rightMovie!.title, style: kSubTitleTextStyle,),
-                      Text(isWaiting ? "?" : _model.rightMovie!.release!, style: kSubTitleTextStyle,)
+                      Text(_model.rightMovie?.title ?? "?", style: kSubTitleTextStyle,),
+                      Text(isWaiting ? "?" : _model.rightMovie?.release ?? "?", style: kSubTitleTextStyle,),
+                      Text(isWaiting ? "?" : _model.rightMovie?.synopsis ?? "?", style: kSubTitleTextStyle,),
                     ],
                   ),
                 ),

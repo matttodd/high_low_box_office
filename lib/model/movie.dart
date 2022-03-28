@@ -13,7 +13,8 @@ class Movie {
   Set<String> exemptions;
   String? release;
   String? boxOffice;
-  Image? poster;
+  String? synopsis;
+  ImageProvider? poster;
   int retries = 0;
 
   Movie(this.exemptions) {
@@ -33,16 +34,14 @@ class Movie {
   
   Future loadJSONData() async {
     var client = http.Client();
-    print(title);
     var formattedTitle = title.replaceAll(" ", "+");
-    print(formattedTitle);
     var response = await client.get(Uri.parse(APIKEY + "&t=$formattedTitle"));
-    print(response);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       release = data["Released"];
       boxOffice = data["BoxOffice"];
-      poster = Image.network(data["Poster"]);
+      synopsis = data["Plot"];
+      poster = NetworkImage(data["Poster"]);
     } else {
       print(response.statusCode);
       print(response.body);
