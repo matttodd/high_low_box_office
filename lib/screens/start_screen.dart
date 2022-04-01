@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:high_low_box_office/constants.dart';
-import 'package:high_low_box_office/screens/game_screen.dart';
+import '../components/visibility_text_widget.dart';
+import '../constants.dart';
+import 'game_screen.dart';
+import '../components/promo_row.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({Key? key}) : super(key: key);
@@ -9,41 +11,56 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Center(
-            child: Column(
-              children: [
-                const Text(
-                  'HIGHER LOWER',
-                  style: kTitleTextStyle,
-                ),
-                const Text(
-                  'BOX OFFICE',
-                  style: kSubTitleTextStyle,
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const GameScreen()),
-                    );
-                  },
-                  child: const Text(
-                    'Begin',
-                    style: kStartButtonTextStyle,
-                  ),
-                )
-              ],
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/bridge.jpg"),
+            fit: BoxFit.cover,
+            opacity: 90.0
           ),
-        ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const SizedBox(),
+            Center(
+              child: Column(
+                children: [
+                  const VisibilityText(
+                    'HIGHER LOWER',
+                    style: kTitleTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const VisibilityText(
+                    'BOX OFFICE',
+                    style: kSubTitleTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GameScreen()),
+                      );
+                    },
+                    child: const VisibilityText(
+                      'Begin',
+                      style: kStartButtonTextStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const PromoRow()
+          ],
+        ),
       ),
     );
   }
