@@ -9,8 +9,8 @@ enum Guess {
 
 const kAppBarColor = Color(0xFF111328);
 const kHighScoreKey = 'high-score';
-const kWinnerFontSize = 80.0;
-const kLoserFontSize = 40.0;
+const kWinnerFontSize = 70.0;
+const kLoserFontSize = 50.0;
 const kWinnerColor = Colors.green;
 const kLoseColor = Colors.red;
 
@@ -35,6 +35,7 @@ const kMovieTitleTextStyle = TextStyle(
   color: Colors.white,
   fontSize: 60.0,
   fontWeight: FontWeight.bold,
+  fontFamily: 'Righteous'
 );
 
 const kMovieDataTextStyle = TextStyle(

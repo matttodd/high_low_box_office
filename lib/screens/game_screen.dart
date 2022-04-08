@@ -14,7 +14,7 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateMixin {
   late MovieModel _model;
   bool isWaiting = false;
   bool hasRevealed = false;
@@ -24,6 +24,12 @@ class _GameScreenState extends State<GameScreen> {
     _model = MovieModel();
     super.initState();
     waitForModel();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   TextStyle revealedStyle(Movie? targetMovie, Movie? secondaryMovie) {
@@ -72,12 +78,28 @@ class _GameScreenState extends State<GameScreen> {
       hasRevealed = true;
     });
     await Future.delayed(const Duration(milliseconds: 2000));
+    _controller.forward();
+    await Future.delayed(const Duration(milliseconds: 500));
+    _controller.reset();
     setState(() {
       _model.makeGuess(guess);
       hasRevealed = false;
     });
     handleLoss();
   }
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 500),
+    vsync: this,
+  );
+
+  late final _offsetAnimation = Tween<Offset>(
+    begin: Offset.zero,
+    end: const Offset(-0.5, 0.0),
+  ).animate(CurvedAnimation(
+    parent: _controller,
+    curve: Curves.ease,
+  ));
 
   @override
   Widget build(BuildContext context) {
@@ -88,23 +110,26 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             Text("High Score: ${_model.highScore}", style: kMovieDataTextStyle),
             const Spacer(),
-            const Text("Click the higher grossing film!", style: kMovieDataTextStyle),
+            const Text("Click the higher grossing film!",
+                style: kMovieDataTextStyle),
             const Spacer(),
             Text("Score: ${_model.score}", style: kMovieDataTextStyle),
           ],
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: GestureDetector(
+      body: SlideTransition(
+        position: _offsetAnimation,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            GestureDetector(
               onTap: () {
                 handleAction(Guess.left);
               },
               child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                   fit: BoxFit.cover,
@@ -118,10 +143,12 @@ class _GameScreenState extends State<GameScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AnimatedDefaultTextStyle(
-                          duration: Duration(milliseconds: hasRevealed ? 1500 : 0),
+                          duration:
+                              Duration(milliseconds: hasRevealed ? 1500 : 0),
                           curve: Curves.easeInOutQuint,
                           style: hasRevealed
-                              ? revealedStyle(_model.leftMovie, _model.rightMovie)
+                              ? revealedStyle(
+                                  _model.leftMovie, _model.rightMovie)
                               : kMovieTitleTextStyle,
                           child: VisibilityText(_model.leftMovie?.title ?? "?"),
                         ),
@@ -146,13 +173,12 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: GestureDetector(
+            GestureDetector(
               onTap: () {
                 handleAction(Guess.right);
               },
               child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                   fit: BoxFit.cover,
@@ -166,12 +192,15 @@ class _GameScreenState extends State<GameScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AnimatedDefaultTextStyle(
-                          duration: Duration(milliseconds: hasRevealed ? 1500 : 0),
+                          duration:
+                              Duration(milliseconds: hasRevealed ? 1500 : 0),
                           curve: Curves.easeInOutQuint,
                           style: hasRevealed
-                              ? revealedStyle(_model.rightMovie, _model.leftMovie)
+                              ? revealedStyle(
+                                  _model.rightMovie, _model.leftMovie)
                               : kMovieTitleTextStyle,
-                          child: VisibilityText(_model.rightMovie?.title ?? "?"),
+                          child:
+                              VisibilityText(_model.rightMovie?.title ?? "?"),
                         ),
                         const SizedBox(height: 20),
                         VisibilityText(
@@ -186,9 +215,12 @@ class _GameScreenState extends State<GameScreen> {
                         const SizedBox(height: 20),
                         AnimatedOpacity(
                           opacity: hasRevealed ? 1.0 : 0,
-                          duration: Duration(milliseconds: hasRevealed ? 500 : 0),
+                          duration:
+                              Duration(milliseconds: hasRevealed ? 500 : 0),
                           child: VisibilityText(
-                            isWaiting ? "?" : _model.rightMovie?.boxOffice ?? "?",
+                            isWaiting
+                                ? "?"
+                                : _model.rightMovie?.boxOffice ?? "?",
                             style: kMovieBoxOfficeTextStyle,
                           ),
                         ),
@@ -198,8 +230,50 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ),
             ),
-          )
-        ],
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                fit: BoxFit.cover,
+                image: _model.upNextMovie?.poster ??
+                    const AssetImage('images/transparent.png'),
+              )),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      VisibilityText(
+                        _model.upNextMovie?.title ?? "?",
+                        style: kMovieTitleTextStyle,
+                      ),
+                      const SizedBox(height: 20),
+                      VisibilityText(
+                        isWaiting ? "?" : _model.upNextMovie?.release ?? "?",
+                        style: kMovieDataTextStyle,
+                      ),
+                      const SizedBox(height: 20),
+                      VisibilityText(
+                        isWaiting ? "?" : _model.upNextMovie?.synopsis ?? "?",
+                        style: kMovieDataTextStyle,
+                      ),
+                      const SizedBox(height: 20),
+                      AnimatedOpacity(
+                        opacity: hasRevealed ? 0 : 0,
+                        duration: const Duration(milliseconds: 0),
+                        child: VisibilityText(
+                          isWaiting ? "?" : _model.upNextMovie?.boxOffice ?? "?",
+                          style: kMovieBoxOfficeTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
