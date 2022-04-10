@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:high_low_box_office/movie_list.dart';
 import 'package:http/http.dart' as http;
-import 'package:high_low_box_office/constants.dart';
+import 'package:high_low_box_office/api_key.dart';
 import 'dart:async';
 import "dart:math";
 

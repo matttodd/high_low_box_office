@@ -19,12 +19,12 @@ class PromoRow extends StatelessWidget {
           iconSize: 40.0,
           onPressed: () => launch('https://github.com/matttodd/high_low_box_office'),
         ),
-        IconButton(
-          icon: const Icon(Icons.person),
-          color: Colors.white,
-          iconSize: 40.0,
-          onPressed: () => launch('https://www.matttodd.tk'),
-        ),
+        // IconButton(
+        //   icon: const Icon(Icons.person),
+        //   color: Colors.white,
+        //   iconSize: 40.0,
+        //   onPressed: () => launch('https://www.matttodd.tk'),
+        // ),
         IconButton(
           icon: const Icon(Icons.play_arrow),
           color: Colors.white,

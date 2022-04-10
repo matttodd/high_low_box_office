@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-const APIKEY = "REDACTED";
-
 enum Guess {
   left,
   right
