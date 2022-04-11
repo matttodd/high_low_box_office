@@ -20,13 +20,10 @@ class MovieModel {
     List<Future> futures = [];
     leftMovie = Movie(filmsUsed);
     futures.add(leftMovie!.loadJSONData());
-    // filmsUsed.add(leftMovie.title);
     rightMovie = Movie(filmsUsed);
     futures.add(rightMovie!.loadJSONData());
-    // filmsUsed.add(rightMovie.title);
     upNextMovie = Movie(filmsUsed);
     futures.add(upNextMovie!.loadJSONData());
-    // filmsUsed.add(upNextMovie.title);
     var highScoreFuture = getHighScore();
     futures.add(highScoreFuture);
 
