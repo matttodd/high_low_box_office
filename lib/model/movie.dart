@@ -4,7 +4,7 @@ import 'package:high_low_box_office/movie_list.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import "dart:math";
-import '../../globals.dart' as globals;
+import '../api_key.dart';
 
 
 class Movie {
@@ -35,7 +35,7 @@ class Movie {
   Future loadJSONData() async {
     var client = http.Client();
     var formattedTitle = title.replaceAll(" ", "+");
-    var response = await client.get(Uri.parse(globals.apiBase + "&t=$formattedTitle"));
+    var response = await client.get(Uri.parse(APIKEY + "&t=$formattedTitle"));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       release = data["Released"];
