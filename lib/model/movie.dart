@@ -34,7 +34,7 @@ class Movie {
   
   Future loadJSONData() async {
     var client = http.Client();
-    var formattedTitle = title.replaceAll(" ", "+");
+    var formattedTitle = title.replaceAll(" ", "+").replaceAll("&", "%26");
     var response = await client.get(Uri.parse(APIKEY + "&t=$formattedTitle"));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
